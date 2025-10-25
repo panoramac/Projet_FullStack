@@ -1,0 +1,31 @@
+services:
+  # ----------------------------------------
+  # SERVICE 1: Spring Boot Application
+  # ----------------------------------------
+  app:
+    container_name: springboot-app
+    # Utilise le Dockerfile dans le répertoire actuel pour construire l'image
+    build: .
+    # Mappe le port Hôte (9090) vers le port Interne de l'application (9090)
+    ports:
+      - "9090:8082"
+    restart: always
+    # Charge les variables de connexion DB depuis le fichier .env
+    env_file:
+      - .env
+    # S'assure que la base de données est démarrée avant l'application
+    depends_on:
+      - mysqldb
+
+  # ----------------------------------------
+  # SERVICE 2: MySQL Database
+  # ----------------------------------------
+  mysqldb:
+    container_name: mysqldb
+    image: mysql:8.0
+    # Mappe le port Hôte (3307) vers le port Interne de MySQL (3306)
+    ports:
+      - "3307:3306"
+    # Charge les variables (mot de passe root, nom de la DB) depuis le fichier .env
+    env_file:
+      - .mysqlenv
